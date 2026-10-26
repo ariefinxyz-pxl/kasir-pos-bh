@@ -1,0 +1,8 @@
+{
+  "name":"kasir-pos","version":"1.0.0","main":"main.js",
+  "description":"Kasir POS offline","author":"Toko",
+  "devDependencies":{"electron":"^33.0.0","electron-builder":"^25.0.0"},
+  "build":{"appId":"com.toko.kasir","productName":"Kasir POS",
+    "win":{"target":"nsis"},
+    "nsis":{"oneClick":false,"allowToChangeInstallationDirectory":true}}
+}

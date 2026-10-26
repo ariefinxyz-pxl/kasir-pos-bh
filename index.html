@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kasir Premium</title>
+<style>
+:root{--bg:#0d1420;--s1:#141e2f;--s2:#1b2940;--ln:#27385a;--tx:#e9edf5;--mu:#8a9bb9;--ac:#d6b06b;--ok:#4fc79a;--bad:#ef7070;--r:14px}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx);display:flex;min-height:100vh}
+aside{width:220px;background:var(--s1);border-right:1px solid var(--ln);padding:22px 14px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.logo{font-size:20px;font-weight:700;letter-spacing:.5px;color:var(--ac);padding:0 10px 18px}
+.logo small{display:block;font-size:12px;color:var(--mu);font-weight:400;letter-spacing:0}
+nav button{all:unset;cursor:pointer;display:block;width:100%;padding:11px 12px;border-radius:10px;color:var(--mu);box-sizing:border-box}
+nav button:hover{background:var(--s2);color:var(--tx)}
+nav button.on{background:var(--s2);color:var(--ac);box-shadow:inset 3px 0 var(--ac)}
+nav b{float:right;background:var(--bad);color:#fff;border-radius:9px;font-size:11px;padding:1px 7px}
+main{flex:1;padding:26px 30px;min-width:0}
+h1{font-size:24px;font-weight:600;margin-bottom:18px}
+h3{font-size:18px;margin-bottom:12px}
+.card{background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);padding:16px}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+.prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.p{all:unset;cursor:pointer;background:var(--s1);border:1px solid var(--ln);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.p:hover{border-color:var(--ac);background:var(--s2)}
+.p.x{opacity:.4;pointer-events:none}
+.p span{color:var(--mu);font-size:13px}.p b{color:var(--ac)}
+input,select{background:var(--bg);border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:10px 12px;font:inherit;width:100%}
+input:focus,select:focus{outline:2px solid var(--ac);outline-offset:-1px}
+label{display:block;color:var(--mu);font-size:13px;margin-bottom:12px}label input,label select{margin-top:5px}
+button.pr,button.gh,button.sm{border:0;border-radius:10px;padding:11px 18px;font:inherit;cursor:pointer;font-weight:600}
+.pr{background:var(--ac);color:#1a1405}.pr:hover{filter:brightness(1.1)}
+.gh{background:var(--s2);color:var(--tx)}.sm{padding:6px 12px!important;background:var(--s2);color:var(--tx);font-weight:500!important}
+.sm:hover{background:var(--ln)}
+.row{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;color:var(--mu);font-weight:500;font-size:13px;padding:8px 10px;border-bottom:1px solid var(--ln)}
+td{padding:11px 10px;border-bottom:1px solid #1e2c46}td.r,th.r{text-align:right}
+.mu{color:var(--mu)}.ok{color:var(--ok)}.bad{color:var(--bad)}.ac{color:var(--ac)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);padding:14px 16px}
+.stat span{color:var(--mu);font-size:13px}.stat div{font-size:21px;font-weight:600;margin-top:4px}
+.cart{position:sticky;top:20px}
+.ci{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--ln)}
+.ci>div:first-child{flex:1;min-width:0}.ci small{color:var(--mu)}
+.q{display:flex;align-items:center;gap:6px}.q button{all:unset;cursor:pointer;width:26px;height:26px;text-align:center;background:var(--s2);border-radius:7px}
+.tot{display:flex;justify-content:space-between;font-size:22px;font-weight:700;margin:16px 0 12px}
+.big{font-size:32px;font-weight:700;color:var(--ac);margin-bottom:14px}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}.tabs .sm.on{background:var(--ac);color:#1a1405}
+.top{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.top>*{width:auto}
+.empty{text-align:center;color:var(--mu);padding:40px 10px}
+dialog{background:var(--s1);color:var(--tx);border:1px solid var(--ln);border-radius:18px;padding:24px;width:min(440px,92vw);margin:auto}
+dialog::backdrop{background:#000a;backdrop-filter:blur(3px)}
+#t{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ac);color:#1a1405;padding:11px 20px;border-radius:12px;font-weight:600;display:none;z-index:9}
+.wrap{overflow-x:auto}
+@media(max-width:900px){body{flex-direction:column}aside{width:100%;height:auto;position:static;flex-direction:row;overflow-x:auto;padding:10px}.logo{display:none}nav{display:flex}nav button{white-space:nowrap}.grid{grid-template-columns:1fr}}
+@media print{aside,.top,.tabs,button{display:none!important}body{background:#fff;color:#000}.card,.stat{border-color:#ccc;background:#fff}}
+</style></head><body>
+<aside><div class="logo">KASIR<small>Toko • Offline</small></div><nav id="nav"></nav></aside>
+<main id="main"></main><dialog id="m"></dialog><input id="xf" type="file" accept=".xlsx,.csv" hidden><div id="t"></div>
+<script>
+const $=s=>document.querySelector(s),m=$('#m');
+const rp=n=>'Rp '+Math.round(n||0).toLocaleString('id-ID');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dt=t=>new Date(t).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'});
+const ymd=t=>{const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const nid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+let db={products:[],sales:[],ins:[]};
+try{db=Object.assign(db,JSON.parse(localStorage.getItem('pos_db')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('pos_db',JSON.stringify(db))}catch(e){toast('Gagal menyimpan data')}};
+const toast=s=>{const t=$('#t');t.textContent=s;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',4200)};
+const prod=id=>db.products.find(p=>p.id===id);
+const sisa=s=>s.total-s.paid;
+const modal=h=>{m.innerHTML=h;if(!m.open)m.showModal()};
+let view='kasir',cart=[],q='',rtab='jual',from=ymd(Date.now()).slice(0,8)+'01',to=ymd(Date.now());
+const NAV=[['kasir','Kasir'],['barang','Barang'],['masuk','Stok masuk'],['hutang','Piutang'],['laporan','Laporan']];
+function go(v){view=v;render()}
+function render(){
+  const n=db.sales.filter(s=>sisa(s)>0).length;
+  $('#nav').innerHTML=NAV.map(([k,l])=>`<button class="${k===view?'on':''}" onclick="go('${k}')">${l}${k==='hutang'&&n?`<b>${n}</b>`:''}</button>`).join('');
+  $('#main').innerHTML=({kasir,barang,masuk,hutang,laporan})[view]();
+}
+/* KASIR */
+const total=()=>cart.reduce((a,c)=>a+c.q*prod(c.id).price,0);
+function kasir(){
+  const list=db.products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));
+  return `<h1>Kasir</h1><div class="grid"><div><input placeholder="Cari barang..." value="${esc(q)}" oninput="q=this.value;keepFocus(this)" id="sq">
+  <div class="prods">${list.map(p=>`<button class="p ${p.stock<=0?'x':''}" onclick="add('${p.id}')"><div>${esc(p.name)}</div><b>${rp(p.price)}</b><span>Stok ${p.stock}</span></button>`).join('')||`<div class="empty" style="grid-column:1/-1">${db.products.length?'Barang tidak ditemukan.':'Belum ada barang. Tambahkan dulu di menu Barang.'}</div>`}</div></div>
+  <div class="card cart"><h3>Keranjang</h3>${cart.map(c=>{const p=prod(c.id);return `<div class="ci"><div>${esc(p.name)}<br><small>${rp(p.price)}</small></div><div class="q"><button onclick="chg('${c.id}',-1)">−</button>${c.q}<button onclick="chg('${c.id}',1)">+</button></div><div style="min-width:80px;text-align:right">${rp(p.price*c.q)}</div></div>`}).join('')||'<div class="empty">Pilih barang di kiri.</div>'}
+  <div class="tot"><span>Total</span><span class="ac">${rp(total())}</span></div>
+  <button class="pr" style="width:100%" onclick="pay()" ${cart.length?'':'disabled'}>Bayar</button>
+  ${cart.length?'<button class="gh" style="width:100%;margin-top:8px" onclick="cart=[];render()">Kosongkan</button>':''}</div></div>`;
+}
+function keepFocus(el){const pos=el.selectionStart;render();const e=$('#sq');e.focus();e.setSelectionRange(pos,pos)}
+function add(id){const p=prod(id),c=cart.find(x=>x.id===id);if((c?c.q:0)>=p.stock)return toast('Stok tidak cukup');c?c.q++:cart.push({id,q:1});render()}
+function chg(id,d){const c=cart.find(x=>x.id===id),p=prod(id);if(d>0&&c.q>=p.stock)return toast('Stok tidak cukup');c.q+=d;if(c.q<=0)cart=cart.filter(x=>x!==c);render()}
+function pay(){const t=total();modal(`<h3>Pembayaran</h3><div class="big">${rp(t)}</div>
+  <label>Nama pelanggan<input id="cu" placeholder="Wajib diisi jika ada hutang"></label>
+  <label>Uang diterima<input id="pd" type="number" value="${t}" oninput="chg2()"></label><div id="ch"></div>
+  <div class="row"><button class="gh" onclick="m.close()">Batal</button><button class="gh" onclick="$('#pd').value=0;chg2()">Semua jadi hutang</button><button class="pr" onclick="done()">Selesaikan</button></div>`);chg2()}
+function chg2(){const d=+$('#pd').value||0,t=total();$('#ch').innerHTML=d>=t?`Kembalian <b class="ok">${rp(d-t)}</b>`:`Sisa dicatat sebagai hutang <b class="bad">${rp(t-d)}</b>`}
+function done(){
+  const t=total(),p=Math.max(0,+$('#pd').value||0),cu=$('#cu').value.trim();
+  if(p<t&&!cu)return toast('Isi nama pelanggan untuk transaksi hutang');
+  const items=cart.map(c=>{const x=prod(c.id);x.stock-=c.q;return{id:x.id,n:x.name,q:c.q,p:x.price,c:x.cost}});
+  const id=db.sales.reduce((a,s)=>Math.max(a,s.id),0)+1;
+  db.sales.push({id,t:Date.now(),cu,items,total:t,paid:Math.min(p,t),pays:[]});
+  cart=[];save();m.close();toast('Transaksi TRX-'+String(id).padStart(4,'0')+' tersimpan');render();
+}
+/* BARANG */
+function barang(){
+  return `<h1>Barang</h1><div class="top"><button class="pr" onclick="pform()">Tambah barang</button><button class="sm" onclick="xbarang()">Export Excel</button><button class="sm" onclick="imp('barang')">Import Excel</button><button class="sm" onclick="tpl('barang')">Template</button></div>
+  <div class="card wrap"><table><tr><th>Nama</th><th class="r">Harga jual</th><th class="r">Harga modal</th><th class="r">Stok</th><th></th></tr>
+  ${db.products.map(p=>`<tr><td>${esc(p.name)}</td><td class="r">${rp(p.price)}</td><td class="r mu">${rp(p.cost)}</td><td class="r ${p.stock<=5?'bad':''}">${p.stock}</td><td class="r"><button class="sm" onclick="pform('${p.id}')">Ubah</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Belum ada barang.</td></tr>'}</table></div>`;
+}
+function pform(id){
+  const p=id?prod(id):{name:'',price:'',cost:'',stock:0};
+  modal(`<h3>${id?'Ubah':'Tambah'} barang</h3><label>Nama barang<input id="fn" value="${esc(p.name)}"></label>
+  <label>Harga jual<input id="fp" type="number" value="${p.price}"></label><label>Harga modal<input id="fc" type="number" value="${p.cost}"></label>
+  ${id?'':'<label>Stok awal<input id="fs" type="number" value="0"></label>'}
+  <div class="row">${id?`<button class="gh bad" onclick="pdel('${id}')">Hapus</button>`:''}<button class="gh" onclick="m.close()">Batal</button><button class="pr" onclick="psave('${id||''}')">Simpan</button></div>`);
+}
+function psave(id){
+  const name=$('#fn').value.trim(),price=+$('#fp').value,cost=+$('#fc').value||0;
+  if(!name||!(price>=0)||$('#fp').value==='')return toast('Nama dan harga jual wajib diisi');
+  if(id){Object.assign(prod(id),{name,price,cost})}else db.products.push({id:nid(),name,price,cost,stock:+$('#fs').value||0});
+  save();m.close();render();
+}
+function pdel(id){if(!confirm('Hapus barang ini? Riwayat penjualan tetap tersimpan.'))return;db.products=db.products.filter(p=>p.id!==id);cart=cart.filter(c=>c.id!==id);save();m.close();render()}
+/* STOK MASUK */
+function masuk(){
+  return `<h1>Stok masuk</h1><div class="top"><button class="sm" onclick="xmasuk()">Export Excel</button><button class="sm" onclick="imp('masuk')">Import Excel</button><button class="sm" onclick="tpl('masuk')">Template</button></div><div class="grid" style="grid-template-columns:340px 1fr"><div class="card"><h3>Catat barang masuk</h3>
+  <label>Barang<select id="ip">${db.products.map(p=>`<option value="${p.id}">${esc(p.name)} (stok ${p.stock})</option>`).join('')}</select></label>
+  <label>Jumlah masuk<input id="iq" type="number" min="1"></label>
+  <label>Harga modal baru (opsional)<input id="ic" type="number"></label>
+  <button class="pr" style="width:100%" onclick="isave()">Simpan stok masuk</button></div>
+  <div class="card wrap"><h3>Riwayat</h3><table><tr><th>Tanggal</th><th>Barang</th><th class="r">Jumlah</th></tr>
+  ${db.ins.slice().reverse().slice(0,100).map(i=>`<tr><td class="mu">${dt(i.t)}</td><td>${esc(i.n)}</td><td class="r ok">+${i.q}</td></tr>`).join('')||'<tr><td colspan="3" class="empty">Belum ada stok masuk.</td></tr>'}</table></div></div>`;
+}
+function isave(){
+  const p=prod($('#ip').value),qn=+$('#iq').value,c=+$('#ic').value;
+  if(!p||!(qn>0))return toast('Pilih barang dan isi jumlah');
+  p.stock+=qn;if(c>0)p.cost=c;db.ins.push({t:Date.now(),id:p.id,n:p.name,q:qn});save();toast('Stok '+p.name+' bertambah '+qn);render();
+}
+/* HUTANG */
+let sel=new Set();
+const detail=s=>s.items.map(i=>`<div class="mu" style="font-size:13px">${esc(i.n)} — ${i.q} × ${rp(i.p)} = ${rp(i.q*i.p)}</div>`).join('');
+function hutang(){
+  const l=db.sales.filter(s=>sisa(s)>0).sort((a,b)=>a.t-b.t),G={};
+  l.forEach(s=>(G[s.cu]=G[s.cu]||[]).push(s));
+  const st=l.filter(s=>sel.has(s.id)).reduce((a,s)=>a+sisa(s),0);
+  return `<h1>Antrian hutang</h1><div class="stats"><div class="stat"><span>Total piutang</span><div class="bad">${rp(l.reduce((a,s)=>a+sisa(s),0))}</div></div><div class="stat"><span>Orang berhutang</span><div>${Object.keys(G).length}</div></div><div class="stat"><span>Terpilih untuk dilunasi</span><div class="ac">${rp(st)}</div></div></div>
+  <div class="top"><button class="pr" onclick="lunasSel()" ${sel.size?'':'disabled'}>Lunasi terpilih</button><button class="sm" onclick="xhutang()">Export Excel</button></div>
+  ${Object.entries(G).map(([cu,a])=>`<div class="card wrap" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="margin:0">${esc(cu)} <span class="bad">${rp(a.reduce((x,s)=>x+sisa(s),0))}</span></h3><button class="sm" onclick="selAll([${a.map(s=>s.id)}])">Pilih semua</button></div>
+  <table>${a.map(s=>`<tr><td style="width:34px"><input type="checkbox" style="width:auto" ${sel.has(s.id)?'checked':''} onchange="tsel(${s.id})"></td><td><b>TRX-${String(s.id).padStart(4,'0')}</b> <span class="mu">${dt(s.t)}</span>${detail(s)}</td><td class="r"><div class="mu">Total ${rp(s.total)}</div><div class="bad"><b>Sisa ${rp(sisa(s))}</b></div></td><td class="r"><button class="sm" onclick="hform(${s.id})">Cicil</button></td></tr>`).join('')}</table></div>`).join('')||'<div class="empty card">Tidak ada hutang. Semua lunas.</div>'}`;
+}
+function tsel(id){sel.has(id)?sel.delete(id):sel.add(id);render()}
+function selAll(ids){const all=ids.every(i=>sel.has(i));ids.forEach(i=>all?sel.delete(i):sel.add(i));render()}
+function lunasSel(){
+  const l=db.sales.filter(s=>sel.has(s.id)&&sisa(s)>0),tt=l.reduce((a,s)=>a+sisa(s),0);
+  if(!l.length||!confirm('Lunasi '+l.length+' transaksi senilai '+rp(tt)+'?'))return;
+  l.forEach(s=>{const a=sisa(s);s.paid+=a;s.pays.push({t:Date.now(),a})});sel.clear();save();toast('Lunas '+rp(tt)+' masuk ke transaksi');render();
+}
+function hform(id){const s=db.sales.find(x=>x.id===id);modal(`<h3>Bayar hutang ${esc(s.cu)}</h3>${detail(s)}<div class="big" style="margin-top:10px">${rp(sisa(s))}</div>
+  <label>Jumlah dibayar<input id="hp" type="number" value="${sisa(s)}"></label><div class="row"><button class="gh" onclick="m.close()">Batal</button><button class="pr" onclick="hsave(${id})">Simpan pembayaran</button></div>`)}
+function hsave(id){const s=db.sales.find(x=>x.id===id),a=Math.min(+$('#hp').value||0,sisa(s));if(a<=0)return toast('Isi jumlah pembayaran');s.paid+=a;s.pays.push({t:Date.now(),a});save();m.close();toast('Pembayaran '+rp(a)+' masuk ke transaksi');render()}
+const xhutang=()=>{const r=[['Pelanggan','No Transaksi','Tanggal','Barang','Qty','Harga','Subtotal','Total Transaksi','Sisa Hutang']];db.sales.filter(s=>sisa(s)>0).sort((a,b)=>a.cu.localeCompare(b.cu)||a.t-b.t).forEach(s=>s.items.forEach((i,k)=>r.push([s.cu,'TRX-'+String(s.id).padStart(4,'0'),ymd(s.t),i.n,i.q,i.p,i.q*i.p,k?'':s.total,k?'':sisa(s)])));xlsx('piutang',r,'Piutang')};
+function toHutang(id){const s=db.sales.find(x=>x.id===id);modal(`<h3>Jadikan hutang</h3>${detail(s)}<div class="big" style="margin-top:10px">${rp(s.total)}</div>
+  <label>Nama pelanggan<input id="hn" value="${esc(s.cu)}" placeholder="Wajib diisi"></label>
+  <label>Sudah dibayar (isi 0 jika belum bayar)<input id="hd" type="number" value="0"></label>
+  <div class="row"><button class="gh" onclick="m.close()">Batal</button><button class="pr" onclick="hok(${id})">Pindahkan ke hutang</button></div>`)}
+function hok(id){const s=db.sales.find(x=>x.id===id),n=$('#hn').value.trim(),d=Math.max(0,+$('#hd').value||0);if(!n)return toast('Isi nama pelanggan');if(d>=s.total)return toast('Jumlah dibayar harus kurang dari total');s.cu=n;s.paid=d;s.pays=[];save();m.close();toast('Transaksi dipindahkan ke daftar hutang');render()}
+/* LAPORAN */
+function laporan(){
+  const ss=db.sales.filter(s=>ymd(s.t)>=from&&ymd(s.t)<=to),omz=ss.reduce((a,s)=>a+s.total,0);
+  const laba=ss.reduce((a,s)=>a+s.items.reduce((b,i)=>b+(i.p-i.c)*i.q,0),0);
+  const sold={};ss.forEach(s=>s.items.forEach(i=>{const o=sold[i.n]||(sold[i.n]={q:0,v:0});o.q+=i.q;o.v+=i.q*i.p}));
+  const pl=[];db.sales.forEach(s=>s.pays.forEach(p=>{if(ymd(p.t)>=from&&ymd(p.t)<=to)pl.push({t:p.t,a:p.a,s})}));
+  const kas=ss.reduce((a,s)=>a+s.paid-s.pays.reduce((b,p)=>b+p.a,0),0)+pl.reduce((a,p)=>a+p.a,0);
+  const nilai=db.products.reduce((a,p)=>a+p.stock*p.cost,0);
+  let body;
+  if(rtab==='jual')body=`<div class="stats"><div class="stat"><span>Omzet</span><div class="ac">${rp(omz)}</div></div><div class="stat"><span>Laba kotor</span><div class="ok">${rp(laba)}</div></div><div class="stat"><span>Transaksi</span><div>${ss.length}</div></div><div class="stat"><span>Kas diterima</span><div class="ok">${rp(kas)}</div></div><div class="stat"><span>Belum dibayar</span><div class="bad">${rp(ss.reduce((a,s)=>a+sisa(s),0))}</div></div></div>
+  ${pl.length?`<div class="card wrap" style="margin-bottom:16px"><h3>Pelunasan hutang diterima</h3><table><tr><th>Waktu bayar</th><th>Pelanggan</th><th>Transaksi</th><th class="r">Dibayar</th></tr>${pl.reverse().map(p=>`<tr><td class="mu">${dt(p.t)}</td><td>${esc(p.s.cu)}</td><td>TRX-${String(p.s.id).padStart(4,'0')}</td><td class="r ok">${rp(p.a)}</td></tr>`).join('')}</table></div>`:''}<div class="grid" style="grid-template-columns:1fr 320px"><div class="card wrap"><h3>Daftar transaksi</h3><table><tr><th>No</th><th>Waktu</th><th>Pelanggan</th><th class="r">Total</th><th class="r">Status</th><th></th></tr>
+  ${ss.slice().reverse().map(s=>`<tr><td>TRX-${String(s.id).padStart(4,'0')}</td><td class="mu">${dt(s.t)}</td><td>${esc(s.cu)||'<span class=mu>Umum</span>'}</td><td class="r">${rp(s.total)}</td><td class="r ${sisa(s)>0?'bad':'ok'}">${sisa(s)>0?'Sisa '+rp(sisa(s)):'Lunas'}</td><td class="r"><button class="sm" onclick="toHutang(${s.id})">${sisa(s)>0?'Ubah hutang':'Jadikan hutang'}</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Tidak ada transaksi pada periode ini.</td></tr>'}</table></div>
+  <div class="card"><h3>Barang terlaris</h3>${Object.entries(sold).sort((a,b)=>b[1].q-a[1].q).slice(0,8).map(([n,o])=>`<div class="ci"><div>${esc(n)}</div><div class="mu">${o.q} terjual</div></div>`).join('')||'<div class="empty">Belum ada data.</div>'}</div></div>`;
+  else body=`<div class="stats"><div class="stat"><span>Jumlah jenis barang</span><div>${db.products.length}</div></div><div class="stat"><span>Nilai stok (modal)</span><div class="ac">${rp(nilai)}</div></div></div>
+  <div class="card wrap"><table><tr><th>Barang</th><th class="r">Masuk (periode)</th><th class="r">Terjual (periode)</th><th class="r">Stok akhir</th><th class="r">Nilai</th></tr>
+  ${db.products.map(p=>{const mi=db.ins.filter(i=>i.id===p.id&&ymd(i.t)>=from&&ymd(i.t)<=to).reduce((a,i)=>a+i.q,0),so=(sold[p.name]||{q:0}).q;return `<tr><td>${esc(p.name)}</td><td class="r ok">${mi}</td><td class="r">${so}</td><td class="r ${p.stock<=5?'bad':''}"><b>${p.stock}</b></td><td class="r mu">${rp(p.stock*p.cost)}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Belum ada barang.</td></tr>'}</table></div>`;
+  return `<h1>Laporan</h1><div class="top"><input type="date" value="${from}" onchange="from=this.value;render()"><input type="date" value="${to}" onchange="to=this.value;render()">
+  <button class="sm" onclick="csv()">Export Excel</button><button class="sm" onclick="window.print()">Cetak</button><button class="sm" onclick="backup()">Backup data</button><button class="sm" onclick="$('#rf').click()">Restore data</button><input id="rf" type="file" accept=".json" hidden onchange="restore(this)"></div>
+  <div class="tabs"><button class="sm ${rtab==='jual'?'on':''}" onclick="rtab='jual';render()">Penjualan</button><button class="sm ${rtab==='stok'?'on':''}" onclick="rtab='stok';render()">Stok akhir</button></div>${body}`;
+}
+function dl(name,txt,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()}
+function csv(){const inr=s=>ymd(s.t)>=from&&ymd(s.t)<=to;const r=rtab==='jual'?[['No','Waktu','Pelanggan','Barang','Qty','Harga','Total Transaksi','Dibayar','Sisa']].concat(db.sales.filter(inr).flatMap(s=>s.items.map((i,k)=>['TRX-'+s.id,dt(s.t),s.cu,i.n,i.q,i.p,k?'':s.total,k?'':s.paid,k?'':sisa(s)]))):[['Barang','Stok akhir','Harga modal','Nilai']].concat(db.products.map(p=>[p.name,p.stock,p.cost,p.stock*p.cost]));xlsx('laporan-'+rtab+'-'+ymd(Date.now()),r,'Laporan')}
+function backup(){dl('backup-kasir-'+ymd(Date.now())+'.json',JSON.stringify(db),'application/json')}
+function restore(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.products)||!Array.isArray(d.sales))throw 0;if(!confirm('Data sekarang akan diganti dengan backup. Lanjut?'))return;db=Object.assign({products:[],sales:[],ins:[]},d);save();toast('Data berhasil dipulihkan');render()}catch(e){toast('File backup tidak valid')}};r.readAsText(f)}
+/* EXCEL */
+const crcT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc=b=>{let c=-1;for(const x of b)c=crcT[(c^x)&255]^(c>>>8);return(c^-1)>>>0};
+const U=new TextEncoder(),colL=i=>String.fromCharCode(65+i);
+function zip(files){
+  const loc=[],cen=[];let off=0;
+  for(const[n,s]of files){const nb=U.encode(n),d=U.encode(s),c=crc(d);
+    const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(12,0x21,true);h.setUint32(14,c,true);h.setUint32(18,d.length,true);h.setUint32(22,d.length,true);h.setUint16(26,nb.length,true);
+    const g=new DataView(new ArrayBuffer(46));g.setUint32(0,0x02014b50,true);g.setUint16(4,20,true);g.setUint16(6,20,true);g.setUint16(14,0x21,true);g.setUint32(16,c,true);g.setUint32(20,d.length,true);g.setUint32(24,d.length,true);g.setUint16(28,nb.length,true);g.setUint32(42,off,true);
+    loc.push(h.buffer,nb,d);cen.push(g.buffer,nb);off+=30+nb.length+d.length}
+  const cs=cen.reduce((a,x)=>a+x.byteLength,0),e=new DataView(new ArrayBuffer(22));
+  e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+  return new Blob([...loc,...cen,e.buffer]);
+}
+function xlsx(name,rows,sheet){
+  const x=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'');
+  const sd=rows.map((r,i)=>`<row r="${i+1}">`+r.map((v,j)=>typeof v==='number'?`<c r="${colL(j)}${i+1}"><v>${v}</v></c>`:`<c r="${colL(j)}${i+1}" t="inlineStr"><is><t>${x(v)}</t></is></c>`).join('')+'</row>').join('');
+  const H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',R='http://schemas.openxmlformats.org/package/2006/relationships',O='http://schemas.openxmlformats.org/officeDocument/2006/relationships',S='http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+  const f=[['[Content_Types].xml',H+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'],
+  ['_rels/.rels',H+`<Relationships xmlns="${R}"><Relationship Id="rId1" Type="${O}/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+  ['xl/workbook.xml',H+`<workbook xmlns="${S}" xmlns:r="${O}"><sheets><sheet name="${sheet}" sheetId="1" r:id="rId1"/></sheets></workbook>`],
+  ['xl/_rels/workbook.xml.rels',H+`<Relationships xmlns="${R}"><Relationship Id="rId1" Type="${O}/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`],
+  ['xl/worksheets/sheet1.xml',H+`<worksheet xmlns="${S}"><cols><col min="1" max="10" width="22" customWidth="1"/></cols><sheetData>${sd}</sheetData></worksheet>`]];
+  const a=document.createElement('a');a.href=URL.createObjectURL(zip(f));a.download=name+'.xlsx';a.click();
+}
+async function inflate(b){return new Uint8Array(await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer())}
+async function readXlsx(buf){
+  const v=new DataView(buf),u=new Uint8Array(buf);let e=buf.byteLength-22;while(e>=0&&v.getUint32(e,true)!==0x06054b50)e--;
+  const n=v.getUint16(e+10,true);let p=v.getUint32(e+16,true);const F={};
+  for(let i=0;i<n;i++){const meth=v.getUint16(p+10,true),cs=v.getUint32(p+20,true),nl=v.getUint16(p+28,true),el=v.getUint16(p+30,true),cl=v.getUint16(p+32,true),lo=v.getUint32(p+42,true);
+    const name=new TextDecoder().decode(u.subarray(p+46,p+46+nl));p+=46+nl+el+cl;
+    if(name==='xl/worksheets/sheet1.xml'||name==='xl/sharedStrings.xml'){const ds=lo+30+v.getUint16(lo+26,true)+v.getUint16(lo+28,true);let d=u.subarray(ds,ds+cs);if(meth===8)d=await inflate(d);F[name]=new TextDecoder().decode(d)}}
+  const P=s=>new DOMParser().parseFromString(s,'application/xml');
+  const ss=F['xl/sharedStrings.xml']?[...P(F['xl/sharedStrings.xml']).getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join('')):[];
+  const rows=[];
+  for(const r of P(F['xl/worksheets/sheet1.xml']).getElementsByTagName('row')){const row=[];
+    for(const c of r.getElementsByTagName('c')){const ci=[...c.getAttribute('r').replace(/\d/g,'')].reduce((a,ch)=>a*26+ch.charCodeAt(0)-64,0)-1,t=c.getAttribute('t'),vv=c.getElementsByTagName('v')[0];
+      let val=t==='inlineStr'?[...c.getElementsByTagName('t')].map(x=>x.textContent).join(''):vv?vv.textContent:'';if(t==='s')val=ss[+val];row[ci]=val}
+    rows.push(Array.from(row,x=>x??''))}
+  return rows;
+}
+function readCsv(t){t=t.replace(/^\ufeff/,'');const l=t.split('\n')[0],d=(l.match(/;/g)||[]).length>(l.match(/,/g)||[]).length?';':',',rows=[];let r=[],c='',q=false;
+  for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==d){r.push(c);c=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;r.push(c);rows.push(r);r=[];c=''}else c+=ch}
+  if(c||r.length){r.push(c);rows.push(r)}return rows}
+const num=v=>{const n=parseFloat(String(v).replace(/[^\d.,-]/g,'').replace(/\.(?=\d{3}\b)/g,'').replace(',','.'));return isNaN(n)?0:n};
+let xk='';
+function imp(k){xk=k;$('#xf').value='';$('#xf').click()}
+$('#xf').onchange=async e=>{const f=e.target.files[0];if(!f)return;let rows;
+  try{rows=/\.csv$/i.test(f.name)?readCsv(await f.text()):await readXlsx(await f.arrayBuffer())}catch(err){return toast('File tidak bisa dibaca. Gunakan .xlsx atau .csv')}
+  rows=rows.slice(1).filter(r=>r.some(x=>String(x).trim()));xk==='barang'?impBarang(rows):impMasuk(rows)};
+function impBarang(rows){let a=0,u=0;rows.forEach(r=>{const n=String(r[0]).trim();if(!n)return;const p=db.products.find(x=>x.name.toLowerCase()===n.toLowerCase());
+  if(p){p.price=num(r[1]);p.cost=num(r[2]);u++}else{db.products.push({id:nid(),name:n,price:num(r[1]),cost:num(r[2]),stock:num(r[3])});a++}});
+  save();toast(a+' barang baru, '+u+' barang diperbarui (harga). Stok hanya dipakai untuk barang baru.');render()}
+function impMasuk(rows){let ok=0;const miss=new Set();rows.forEach(r=>{const nm=String(r[1]).trim(),p=db.products.find(x=>x.name.toLowerCase()===nm.toLowerCase()),qn=num(r[2]);
+  if(!p||!(qn>0)){miss.add(nm);return}let t=Date.now();if(r[0]!==''){const n=+r[0],x=n>20000?(n-25569)*864e5:Date.parse(r[0]);if(!isNaN(x))t=x}
+  p.stock+=qn;const c=num(r[3]);if(c>0)p.cost=c;db.ins.push({t,id:p.id,n:p.name,q:qn});ok++});
+  save();render();toast(ok+' baris stok masuk'+(miss.size?'. Dilewati (barang belum terdaftar): '+[...miss].slice(0,3).join(', '):''))}
+const xbarang=()=>xlsx('data-barang',[['Nama','Harga Jual','Harga Modal','Stok']].concat(db.products.map(p=>[p.name,p.price,p.cost,p.stock])),'Barang');
+const xmasuk=()=>xlsx('penerimaan-barang',[['Tanggal','Nama Barang','Jumlah','Harga Modal']].concat(db.ins.map(i=>[ymd(i.t),i.n,i.q,prod(i.id)?prod(i.id).cost:0])),'Stok Masuk');
+const tpl=k=>k==='barang'?xlsx('template-barang',[['Nama','Harga Jual','Harga Modal','Stok'],['Contoh Barang',5000,3500,20]],'Barang'):xlsx('template-stok-masuk',[['Tanggal','Nama Barang','Jumlah','Harga Modal'],[ymd(Date.now()),'Contoh Barang',10,3500]],'Stok Masuk');
+render();
+</script></body></html>
